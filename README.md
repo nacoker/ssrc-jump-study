@@ -15,8 +15,6 @@ Planned future expansions include:
      - Incorporating synchronization with force-time curve during countermovement jump to time-sync EMG relative to jump takeoff
 
      
-For further reading on EMG processing and interpretation, please see: 
-[The ABCs of EMG](https://www.noraxon.com/wp-content/uploads/2014/12/ABC-EMG-ISBN.pdf) by Peter Konrad
-[The ISEK Guidelines for EMG Reporting Standards](https://www1.udel.edu/biology/rosewc/kaap686/notes/EMG%20analysis.pdf) by Roberto Merletti
+For further reading on EMG processing and interpretation, please see [The ABCs of EMG](https://www.noraxon.com/wp-content/uploads/2014/12/ABC-EMG-ISBN.pdf) by Peter Konrad and [The ISEK Guidelines for EMG Reporting Standards](https://www1.udel.edu/biology/rosewc/kaap686/notes/EMG%20analysis.pdf) by Roberto Merletti
 
 Created by [Nick Coker](github.com/nacoker)
