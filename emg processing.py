@@ -83,3 +83,15 @@ def plot_emg_data(data,smoothed_data): # Create plots of all EMG channels with R
         ax[i,1].plot(smoothed_data['time'],smoothed_data.iloc[:,(i+1)],label='RMS')
         ax[i,0].set_title(data.columns[(i+1)])
         ax[i,1].set_title(data.columns[(i+1)])
+        
+#%% Calculate average of two trials
+def average_rms_calc(rms_peak1,rms_peak2):
+    rms_vals = np.zeros((5,2))
+    rms_vals[:,0] = rms_peak1.iloc[:,2]
+    rms_vals[:,1] = rms_peak2.iloc[:,2]
+    average_rms = pd.DataFrame({'rms_trial1':rms_vals[:,0],
+                                'rms_trial2':rms_vals[:,1],
+                                'mean_rms': rms_vals.mean(axis=1)},
+                               index = rms_peak1.index)
+    return average_rms
+    
