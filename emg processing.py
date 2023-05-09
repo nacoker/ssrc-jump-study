@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May  2 16:07:16 2023
+
+@author: sarah
+"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 13 15:24:57 2023
+
+@author: sarah
+"""
+
 # -*- coding: utf-8 -*-
 """
 Created on Wed Feb  1 16:16:58 2023
@@ -16,7 +31,6 @@ from scipy.signal import filtfilt,butter
 #TODO: Implement multi-file import
 #TODO: Implement batch file processing
 #TODO: Further testing on multiple files
-
 #%% Data importing
 def import_list(base_path,folder): # Function for generating list of files to be analyzed
     paths = [path for path in Path(base_path+folder).resolve().glob('**/*.emt')] # Generates a list of all files in a folder containing the .emt file extension
@@ -63,14 +77,30 @@ def smooth_rectify(data,sample_rate = 1000,window=0.02):
     return smoothed
 
 #%% Peak RMS Calculation
-def rms_peak(smoothed):
+def rms_peak(smoothed, smoothed2):
+    '''
+    Accepts two dataframes of processed EMG data, finds max of all columns in each dataframe, 
+    and calculates averaage of each trial across all muscles. Returns a dataframe with peak rms of each trial and average RMS of each trial.
+
+    Parameters
+    ----------
+    smoothed : Dataframe
+        Five channels of EMG RMS data with time values
+    smoothed2 : Dataframe
+        ive channels of EMG RMS data with time values
+
+    Returns
+    -------
+    rms_peak : Dataframe
+        Five rows by 3 columns of RMS max of each muscle by trial and average by muscle across trials.
+
+    '''
     rms_peak = np.zeros((5,3)) # Create numpy array of zeros to store data
     for i in range(1,6):
-        peak_index = smoothed.iloc[:,i].idxmax() #Find index of peak RMS from column i
-        peak_time = smoothed.iloc[peak_index,0] # Find time value corresponding to peak_index
         peak_rms = smoothed.iloc[:,i].max() #Find max RMS, which should occur at peak_index
-        rms_peak[i-1,0:3] = [peak_index,peak_time,peak_rms] #Store values to numpy array
-    rms_peak = pd.DataFrame(rms_peak,index = smoothed.columns[1:7],columns=['peak_index','peak_time','peak_rms']) # convert numpy array to dataframe
+        peak_rms2 = smoothed2.iloc[:,i].max()
+        rms_peak[i-1,0:3] = [peak_rms,peak_rms2,(peak_rms+peak_rms2)/2] #Store values to numpy array
+    rms_peak = pd.DataFrame(rms_peak,index = smoothed.columns[1:7],columns=['rms_trial1','rms_trial2','mean_rms']) # convert numpy array to dataframe
     return rms_peak
 
 
@@ -84,14 +114,3 @@ def plot_emg_data(data,smoothed_data): # Create plots of all EMG channels with R
         ax[i,0].set_title(data.columns[(i+1)])
         ax[i,1].set_title(data.columns[(i+1)])
         
-#%% Calculate average of two trials
-def average_rms_calc(rms_peak1,rms_peak2):
-    rms_vals = np.zeros((5,2))
-    rms_vals[:,0] = rms_peak1.iloc[:,2]
-    rms_vals[:,1] = rms_peak2.iloc[:,2]
-    average_rms = pd.DataFrame({'rms_trial1':rms_vals[:,0],
-                                'rms_trial2':rms_vals[:,1],
-                                'mean_rms': rms_vals.mean(axis=1)},
-                               index = rms_peak1.index)
-    return average_rms
-    
